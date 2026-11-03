@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { articlesAPI, favoritesAPI } from '../api/api';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { articlesAPI, favoritesAPI } from "../api/api";
+import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 
 const ArticleDetailPage = () => {
   const { id } = useParams();
@@ -23,7 +23,7 @@ const ArticleDetailPage = () => {
       const data = await articlesAPI.getById(id);
       setArticle(data.article || null);
     } catch (error) {
-      console.error('Ошибка загрузки статьи:', error);
+      console.error("Ошибка загрузки статьи:", error);
     } finally {
       setLoading(false);
     }
@@ -31,21 +31,21 @@ const ArticleDetailPage = () => {
 
   const handleFavorite = async () => {
     if (!user) {
-      addToast('Войдите, чтобы добавить в избранное', 'error');
+      addToast("Войдите, чтобы добавить в избранное", "error");
       return;
     }
     setFavLoading(true);
     try {
       const data = await favoritesAPI.toggle(id);
       if (data.ok) {
-        setArticle(prev => ({ ...prev, is_favorited: data.is_favorited }));
+        setArticle((prev) => ({ ...prev, is_favorited: data.is_favorited }));
         addToast(
-          data.is_favorited ? 'Добавлено в избранное' : 'Удалено из избранного', 
-          'success'
+          data.is_favorited ? "Добавлено в избранное" : "Удалено из избранного",
+          "success",
         );
       }
     } catch (error) {
-      addToast('Ошибка', 'error');
+      addToast("Ошибка", "error");
     } finally {
       setFavLoading(false);
     }
@@ -59,7 +59,7 @@ const ArticleDetailPage = () => {
     return (
       <div className="loading-page">
         <p>Статья не найдена</p>
-        <button className="btn-primary" onClick={() => navigate('/articles')}>
+        <button className="btn-primary" onClick={() => navigate("/articles")}>
           К статьям
         </button>
       </div>
@@ -69,7 +69,7 @@ const ArticleDetailPage = () => {
   return (
     <div className="article-detail-page">
       <div className="article-detail-container">
-        <button className="back-button" onClick={() => navigate('/articles')}>
+        <button className="back-button" onClick={() => navigate("/articles")}>
           ← Назад к статьям
         </button>
 
@@ -77,23 +77,23 @@ const ArticleDetailPage = () => {
           <div className="article-detail-header">
             <div className="article-author-info">
               <div className="article-author-avatar">
-                <span>{(article.author || 'А')[0].toUpperCase()}</span>
+                <span>{(article.author || "А")[0].toUpperCase()}</span>
               </div>
               <div>
                 <div className="article-author-name">
-                  {article.author || 'Админ'}
+                  {article.author || "Админ"}
                 </div>
                 <div className="article-date">{article.created}</div>
               </div>
             </div>
 
             {user && (
-              <button 
-                className={`favorite-button ${article.is_favorited ? 'active' : ''}`}
+              <button
+                className={`favorite-button ${article.is_favorited ? "active" : ""}`}
                 onClick={handleFavorite}
                 disabled={favLoading}
               >
-                {article.is_favorited ? '★ В избранном' : '☆ В избранное'}
+                {article.is_favorited ? "★ В избранном" : "☆ В избранное"}
               </button>
             )}
           </div>
@@ -102,22 +102,25 @@ const ArticleDetailPage = () => {
 
           {article.tags && article.tags.length > 0 && (
             <div className="article-detail-tags">
-              {article.tags.map(tag => (
-                <span key={tag} className="article-tag">{tag}</span>
+              {article.tags.map((tag) => (
+                <span key={tag} className="article-tag">
+                  {tag}
+                </span>
               ))}
             </div>
           )}
 
-          <div className="article-detail-content">
-            {article.text}
-          </div>
+          <div
+            className="article-detail-content"
+            dangerouslySetInnerHTML={{ __html: article.text }}
+          />
 
           {article.source_url && (
             <div className="article-source">
               <span className="source-label">Источник:</span>
-              <a 
-                href={article.source_url} 
-                target="_blank" 
+              <a
+                href={article.source_url}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="source-link"
               >
