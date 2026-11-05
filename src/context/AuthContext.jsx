@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
   const checkAuth = async () => {
     try {
       const data = await authAPI.getMe();
-      console.log('🔍 checkAuth response:', data);
+      console.log('checkAuth response:', data);
       setUser(data.user || null);
     } catch (error) {
       console.error('Auth check error:', error);
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     const data = await authAPI.login(credentials);
-    console.log('🔐 Login response:', data);
+    console.log('Login response:', data);
     if (!data.ok) {
       throw data;
     }
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     const data = await authAPI.register(userData);
-    console.log('🔐 Register response:', data);
+    console.log('Register response:', data);
     if (!data.ok) {
       throw data;
     }
