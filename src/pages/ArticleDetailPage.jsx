@@ -114,7 +114,6 @@ const ArticleDetailPage = () => {
             className="article-detail-content"
             dangerouslySetInnerHTML={{ __html: article.text }}
           />
-
           {article.source_url && (
             <div className="article-source">
               <span className="source-label">Источник:</span>
