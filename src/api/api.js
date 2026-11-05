@@ -14,8 +14,8 @@ function getHeaders() {
     'Content-Type': 'application/json',
     'X-CSRFToken': getCSRF(),
   };
-  console.log('📋 Headers:', headers);
-  console.log('🍪 All cookies:', document.cookie);
+  console.log('Headers:', headers);
+  console.log('All cookies:', document.cookie);
   return headers;
 }
 //Авторизация
@@ -24,7 +24,7 @@ export const authAPI = {
     fetch('/api/auth/csrf/', {
       credentials: 'same-origin',
     }).then(res => {
-      console.log('🍪 CSRF cookie set, cookies:', document.cookie);
+      console.log('CSRF cookie set, cookies:', document.cookie);
       return res.json();
     }),
 
@@ -35,9 +35,9 @@ export const authAPI = {
     }).then(res => res.json()),
 
   register: (data) => {
-    console.log('📤 Register data:', data);
+    console.log('Register data:', data);
     const body = JSON.stringify(data);
-    console.log('📦 Register body:', body);
+    console.log('Register body:', body);
     return fetch('/api/auth/register/', {
       method: 'POST',
       headers: getHeaders(),
@@ -45,15 +45,15 @@ export const authAPI = {
       body: body,
     }).then(async (res) => {
       const json = await res.json();
-      console.log('📥 Register response:', json);
+      console.log('Register response:', json);
       return json;
     });
   },
 
   login: (data) => {
-    console.log('📤 Login data:', data);
+    console.log('Login data:', data);
     const body = JSON.stringify(data);
-    console.log('📦 Login body:', body);
+    console.log('Login body:', body);
     return fetch('/api/auth/login/', {
       method: 'POST',
       headers: getHeaders(),
@@ -61,7 +61,7 @@ export const authAPI = {
       body: body,
     }).then(async (res) => {
       const json = await res.json();
-      console.log('📥 Login response:', json);
+      console.log('Login response:', json);
       return json;
     });
   },
@@ -192,10 +192,20 @@ export const articlesAPI = {
 
 //ИЗБРАННОЕ
 export const favoritesAPI = {
-  toggle: (articleId) =>
-    fetch(`/api/articles/${articleId}/favorite/`, {
-      method: 'POST',
-      headers: getHeaders(),
-      credentials: 'same-origin',
-    }).then(res => res.json()),
+toggle: (articleId) =>
+fetch(`/api/articles/${articleId}/favorite/`, {
+method: 'POST',
+headers: getHeaders(),
+credentials: 'same-origin',
+}).then(res => res.json()),
+};
+
+// ПАРСИНГ СТАТЕЙ
+export const parseAPI = {
+parseArticles: () =>
+fetch('/api/articles/parse/', {
+method: 'POST',
+headers: getHeaders(),
+credentials: 'same-origin',
+}).then(res => res.json()),
 };
