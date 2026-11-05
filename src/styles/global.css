@@ -1,6 +1,4 @@
-/* =========================================================
-   1. ПЕРЕМЕННЫЕ И БАЗОВЫЕ СТИЛИ
-   ========================================================= */
+/* ===== ПЕРЕМЕННЫЕ ===== */
 :root {
   --bg-primary: #0a0a0f;
   --bg-secondary: #12121a;
@@ -33,14 +31,7 @@ a {
   text-decoration: none;
 }
 
-#root {
-  position: relative;
-  z-index: 1;
-}
-
-/* =========================================================
-   2. ФОНОВЫЕ СВЕЧЕНИЯ И СЕТКА
-   ========================================================= */
+/* ===== ФОНОВЫЕ СВЕЧЕНИЯ ===== */
 .bg-glow {
   position: fixed;
   border-radius: 50%;
@@ -89,11 +80,19 @@ body::after {
   z-index: 0;
 }
 
-/* =========================================================
-   3. УТИЛИТЫ
-   ========================================================= */
-.accent-text { color: var(--accent-green); }
-.accent-purple { color: var(--accent-purple); }
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== УТИЛИТЫ ===== */
+.accent-text {
+  color: var(--accent-green);
+}
+
+.accent-purple {
+  color: var(--accent-purple);
+}
 
 .btn-primary {
   display: inline-block;
@@ -164,9 +163,7 @@ body::after {
   box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);
 }
 
-/* =========================================================
-   4. HEADER
-   ========================================================= */
+/* ===== HEADER ===== */
 .header {
   background: rgba(18, 18, 26, 0.8);
   backdrop-filter: blur(10px);
@@ -231,9 +228,7 @@ body::after {
   border-top: 1px solid var(--border-color);
 }
 
-/* =========================================================
-   5. HERO
-   ========================================================= */
+/* ===== HERO ===== */
 .hero {
   min-height: 85vh;
   display: flex;
@@ -257,7 +252,9 @@ body::after {
   z-index: -1;
 }
 
-.hero-content { max-width: 800px; }
+.hero-content {
+  max-width: 800px;
+}
 
 .hero-label {
   color: var(--accent-green);
@@ -289,9 +286,7 @@ body::after {
   flex-wrap: wrap;
 }
 
-/* =========================================================
-   6. MARQUEE
-   ========================================================= */
+/* ===== MARQUEE ===== */
 .marquee-wrapper {
   background: var(--bg-secondary);
   border-top: 1px solid var(--border-color);
@@ -315,17 +310,20 @@ body::after {
   color: var(--text-secondary);
 }
 
-.marquee-item:nth-child(even) { color: var(--accent-green); }
-.marquee-item:nth-child(3n) { color: var(--accent-purple); }
+.marquee-item:nth-child(even) {
+  color: var(--accent-green);
+}
+
+.marquee-item:nth-child(3n) {
+  color: var(--accent-purple);
+}
 
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
 
-/* =========================================================
-   7. ABOUT SECTION
-   ========================================================= */
+/* ===== ABOUT SECTION ===== */
 .about-section {
   padding: 100px 24px;
   max-width: 1200px;
@@ -388,7 +386,9 @@ body::after {
   transition: opacity 0.3s ease;
 }
 
-.feature-card:hover::before { opacity: 1; }
+.feature-card:hover::before {
+  opacity: 1;
+}
 
 .feature-icon {
   width: 70px;
@@ -419,9 +419,7 @@ body::after {
   line-height: 1.7;
 }
 
-/* =========================================================
-   8. FAQ
-   ========================================================= */
+/* ===== FAQ ===== */
 .faq-section {
   padding: 100px 24px;
   max-width: 800px;
@@ -434,7 +432,9 @@ body::after {
   gap: 16px;
 }
 
-.faq-item { cursor: pointer; }
+.faq-item {
+  cursor: pointer;
+}
 
 .faq-question {
   width: 100%;
@@ -453,7 +453,9 @@ body::after {
   height: 20px;
 }
 
-.faq-question:hover { color: var(--accent-green); }
+.faq-question:hover {
+  color: var(--accent-green);
+}
 
 .faq-icon {
   color: var(--accent-green);
@@ -463,7 +465,9 @@ body::after {
   margin-left: 10px;
 }
 
-.faq-icon-open { transform: rotate(45deg); }
+.faq-icon-open {
+  transform: rotate(45deg);
+}
 
 .faq-answer {
   padding: 0 20px 20px;
@@ -472,9 +476,7 @@ body::after {
   line-height: 1.6;
 }
 
-/* =========================================================
-   9. МОДАЛКИ
-   ========================================================= */
+/* ===== МОДАЛКИ ===== */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -539,12 +541,14 @@ body::after {
   cursor: pointer;
 }
 
-.modal-close:hover { color: var(--text-primary); }
+.modal-close:hover {
+  color: var(--text-primary);
+}
 
-/* =========================================================
-   10. ФОРМЫ И ИНПУТЫ
-   ========================================================= */
-.form-group { margin-bottom: 16px; }
+/* ===== ФОРМЫ И ИНПУТЫ ===== */
+.form-group {
+  margin-bottom: 16px;
+}
 
 .form-label {
   display: block;
@@ -586,7 +590,9 @@ body::after {
   border-color: var(--accent-green);
 }
 
-.cyber-input.error { border-color: var(--error); }
+.cyber-input.error {
+  border-color: var(--error);
+}
 
 textarea.cyber-input {
   resize: vertical;
@@ -616,9 +622,7 @@ textarea.cyber-input {
   display: block;
 }
 
-/* =========================================================
-   11. ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ
-   ========================================================= */
+/* ===== ПРОФИЛЬ ===== */
 .profile-page {
   padding: 60px 24px;
   min-height: calc(100vh - 80px);
@@ -637,7 +641,9 @@ textarea.cyber-input {
   flex-wrap: wrap;
 }
 
-.profile-avatar-wrapper { flex-shrink: 0; }
+.profile-avatar-wrapper {
+  flex-shrink: 0;
+}
 
 .profile-avatar {
   width: 100px;
@@ -683,7 +689,9 @@ textarea.cyber-input {
   line-height: 1.5;
 }
 
-.profile-form { margin-bottom: 30px; }
+.profile-form {
+  margin-bottom: 30px;
+}
 
 .form-title {
   font-size: 20px;
@@ -692,7 +700,9 @@ textarea.cyber-input {
   color: var(--accent-green);
 }
 
-.profile-details { margin-top: 20px; }
+.profile-details {
+  margin-top: 20px;
+}
 
 .detail-row {
   display: flex;
@@ -701,82 +711,58 @@ textarea.cyber-input {
   border-bottom: 1px solid var(--border-color);
 }
 
-.detail-row:last-child { border-bottom: none; }
+.detail-row:last-child {
+  border-bottom: none;
+}
 
 .detail-label {
   color: var(--text-secondary);
   font-size: 14px;
 }
 
-/* =========================================================
-   12. ВКЛАДКИ ПРОФИЛЯ
-   ========================================================= */
-.profile-tabs {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 32px;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 0;
-}
-
-.tab-btn {
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  padding: 12px 20px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s;
-}
-
-.tab-btn:hover { color: var(--text-primary); }
-
-.tab-btn.active {
-  color: var(--accent-green);
-  border-bottom-color: var(--accent-green);
-}
-
-/* =========================================================
-   13. ИЗБРАННОЕ
-   ========================================================= */
-.favorites-section { margin-top: 20px; }
-
-.favorites-list {
+/* ===== TOAST УВЕДОМЛЕНИЯ ===== */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 2000;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
 }
 
-.favorite-article-card {
-  padding: 20px 24px;
+.toast {
+  padding: 14px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  min-width: 250px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  animation: slideInRight 0.3s ease-out;
 }
 
-.favorite-article-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--accent-green);
+.toast-success {
+  background: var(--accent-green);
+  color: var(--bg-primary);
 }
 
-.favorite-article-title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 12px;
+.toast-error {
+  background: var(--error);
+  color: white;
 }
 
-.favorite-article-meta {
-  display: flex;
-  gap: 16px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-top: 12px;
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-/* =========================================================
-   14. СПИСОК ПОСТОВ
-   ========================================================= */
+/* ===== СТРАНИЦА ПОСТОВ ===== */
 .posts-page {
   padding: 60px 24px;
   min-height: calc(100vh - 80px);
@@ -824,7 +810,9 @@ textarea.cyber-input {
   border-color: var(--accent-green);
 }
 
-.post-card-header { margin-bottom: 16px; }
+.post-card-header {
+  margin-bottom: 16px;
+}
 
 .post-author {
   display: flex;
@@ -893,9 +881,18 @@ textarea.cyber-input {
   color: var(--text-secondary);
 }
 
-/* =========================================================
-   15. ДЕТАЛЬНАЯ СТРАНИЦА ПОСТА
-   ========================================================= */
+.loading, .empty-state, .loading-page {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+  font-size: 18px;
+}
+
+.empty-state p {
+  margin-bottom: 8px;
+}
+
+/* ===== ДЕТАЛЬНАЯ СТРАНИЦА ПОСТА ===== */
 .post-detail-page {
   padding: 40px 24px;
   min-height: calc(100vh - 80px);
@@ -917,9 +914,13 @@ textarea.cyber-input {
   transition: opacity 0.2s;
 }
 
-.back-button:hover { opacity: 0.7; }
+.back-button:hover {
+  opacity: 0.7;
+}
 
-.post-detail-card { padding: 32px; }
+.post-detail-card {
+  padding: 32px;
+}
 
 .post-detail-header {
   display: flex;
@@ -969,10 +970,10 @@ textarea.cyber-input {
   color: #ff4444;
 }
 
-/* =========================================================
-   16. КОММЕНТАРИИ
-   ========================================================= */
-.comments-section { margin-top: 40px; }
+/* ===== КОММЕНТАРИИ ===== */
+.comments-section {
+  margin-top: 40px;
+}
 
 .comments-title {
   font-size: 22px;
@@ -1007,7 +1008,9 @@ textarea.cyber-input {
   gap: 16px;
 }
 
-.comment-item { padding: 20px; }
+.comment-item {
+  padding: 20px;
+}
 
 .comment-header {
   display: flex;
@@ -1067,9 +1070,7 @@ textarea.cyber-input {
   font-size: 15px;
 }
 
-/* =========================================================
-   17. ФОТО В ПОСТАХ
-   ========================================================= */
+/* ===== ФОТО В ПОСТАХ ===== */
 .post-card-photo {
   width: 100%;
   height: 200px;
@@ -1078,7 +1079,9 @@ textarea.cyber-input {
   margin-bottom: 16px;
 }
 
-.post-card-content { padding: 0; }
+.post-card-content {
+  padding: 0;
+}
 
 .post-detail-photo {
   width: 100%;
@@ -1119,9 +1122,7 @@ textarea.cyber-input {
   font-weight: 600;
 }
 
-/* =========================================================
-   18. ЛАЙКИ
-   ========================================================= */
+/* ===== ЛАЙКИ ===== */
 .like-btn {
   background: none;
   border: none;
@@ -1138,11 +1139,11 @@ textarea.cyber-input {
   background: rgba(255, 68, 68, 0.1);
 }
 
-.like-btn.liked { color: #ff4444; }
+.like-btn.liked {
+  color: #ff4444;
+}
 
-/* =========================================================
-   19. СПИСОК СТАТЕЙ
-   ========================================================= */
+/* ===== СТРАНИЦА СТАТЕЙ ===== */
 .articles-page {
   padding: 60px 24px;
   min-height: calc(100vh - 80px);
@@ -1153,7 +1154,21 @@ textarea.cyber-input {
   margin: 0 auto;
 }
 
-.articles-header { margin-bottom: 32px; }
+.articles-header {
+  margin-bottom: 32px;
+}
+
+.search-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 200px;
+}
 
 .articles-list {
   display: flex;
@@ -1223,6 +1238,17 @@ textarea.cyber-input {
   line-height: 1.6;
   flex: 1;
   margin-bottom: 16px;
+  overflow: hidden; 
+}
+
+.article-excerpt img {
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: 200px !important;
+  display: block;
+  margin: 12px 0;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 .article-meta {
@@ -1248,9 +1274,7 @@ textarea.cyber-input {
   margin-top: 40px;
 }
 
-/* =========================================================
-   20. ДЕТАЛЬНАЯ СТРАНИЦА СТАТЬИ
-   ========================================================= */
+/* ===== ДЕТАЛЬНАЯ СТРАНИЦА СТАТЬИ ===== */
 .article-detail-page {
   padding: 40px 24px;
   min-height: calc(100vh - 80px);
@@ -1261,7 +1285,10 @@ textarea.cyber-input {
   margin: 0 auto;
 }
 
-.article-detail-card { padding: 32px; }
+.article-detail-card {
+  padding: 32px;
+  overflow: hidden;
+}
 
 .article-detail-image {
   width: 100%;
@@ -1331,26 +1358,54 @@ textarea.cyber-input {
   font-size: 16px;
   line-height: 1.8;
   margin-bottom: 24px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+/* Картинки внутри статьи — АГРЕССИВНЫЕ СТИЛИ */
+.article-detail-content img {
+  max-width: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  display: block !important;
+  margin: 20px auto !important;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  object-fit: contain;
 }
 
-/* HTML-контент статей (картинки, ссылки, параграфы) */
-.article-detail-content img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin: 20px 0;
-  display: block;
+.article-detail-content figure,
+.article-detail-content div[style] {
+  max-width: 100% !important;
+  width: 100% !important;
+  overflow: hidden;
+}
+
+.article-detail-content figure img {
+  width: 100% !important;
+  height: auto !important;
+}
+.article-detail-card img,
+.article-detail-container img {
+  max-width: 100% !important;
+  width: auto !important;
+  height: auto !important;
 }
 
 .article-detail-content a {
   color: var(--accent-green);
   text-decoration: underline;
   transition: opacity 0.2s;
+  word-break: break-all;
 }
 
-.article-detail-content a:hover { opacity: 0.8; }
+.article-detail-content a:hover {
+  opacity: 0.8;
+}
 
-.article-detail-content p { margin-bottom: 16px; }
+.article-detail-content p {
+  margin-bottom: 16px;
+  max-width: 100%;
+}
 
 .article-detail-content h1,
 .article-detail-content h2,
@@ -1358,6 +1413,7 @@ textarea.cyber-input {
   margin: 24px 0 16px;
   font-weight: 700;
   line-height: 1.3;
+  max-width: 100%;
 }
 
 .article-detail-content h1 { font-size: 28px; }
@@ -1370,7 +1426,9 @@ textarea.cyber-input {
   padding-left: 24px;
 }
 
-.article-detail-content li { margin-bottom: 8px; }
+.article-detail-content li {
+  margin-bottom: 8px;
+}
 
 .article-detail-content blockquote {
   border-left: 3px solid var(--accent-purple);
@@ -1386,6 +1444,7 @@ textarea.cyber-input {
   border-radius: 4px;
   font-family: 'Courier New', monospace;
   font-size: 14px;
+  word-break: break-all;
 }
 
 .article-detail-content pre {
@@ -1394,6 +1453,7 @@ textarea.cyber-input {
   border-radius: 8px;
   overflow-x: auto;
   margin: 16px 0;
+  max-width: 100%;
 }
 
 .article-detail-content pre code {
@@ -1430,7 +1490,9 @@ textarea.cyber-input {
   word-break: break-all;
 }
 
-.source-link:hover { text-decoration: underline; }
+.source-link:hover {
+  text-decoration: underline;
+}
 
 .favorite-button {
   background: none;
@@ -1455,9 +1517,7 @@ textarea.cyber-input {
   background: rgba(191, 255, 0, 0.1);
 }
 
-/* =========================================================
-   21. ФИЛЬТРЫ СТАТЕЙ
-   ========================================================= */
+/* ===== ФИЛЬТРЫ ===== */
 .articles-filters {
   display: flex;
   flex-direction: column;
@@ -1506,28 +1566,16 @@ textarea.cyber-input {
   border-color: var(--accent-green);
 }
 
-.tag-btn { font-size: 12px; }
+.tag-btn {
+  font-size: 12px;
+}
 
 .tags-filter {
   border-top: 1px solid var(--border-color);
   padding-top: 16px;
 }
 
-.search-form {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 40px;
-  flex-wrap: wrap;
-}
-
-.search-input {
-  flex: 1;
-  min-width: 200px;
-}
-
-/* =========================================================
-   22. АДМИН-ПАНЕЛЬ
-   ========================================================= */
+/* ===== АДМИН-ПАНЕЛЬ ===== */
 .admin-page {
   padding: 60px 24px;
   min-height: calc(100vh - 80px);
@@ -1641,9 +1689,73 @@ textarea.cyber-input {
   flex-shrink: 0;
 }
 
-/* =========================================================
-   23. ФУТЕР
-   ========================================================= */
+/* ===== ВКЛАДКИ ПРОФИЛЯ ===== */
+.profile-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  color: var(--accent-green);
+  border-bottom-color: var(--accent-green);
+}
+
+/* ===== ИЗБРАННОЕ ===== */
+.favorites-section {
+  margin-top: 20px;
+}
+
+.favorites-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.favorite-article-card {
+  padding: 20px 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.favorite-article-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-green);
+}
+
+.favorite-article-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.favorite-article-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 12px;
+}
+
+/* ===== ФУТЕР ===== */
 .site-footer {
   background: var(--bg-primary);
   border-top: 1px solid var(--border-color);
@@ -1671,7 +1783,9 @@ textarea.cyber-input {
   margin-bottom: 40px;
 }
 
-.footer-brand { max-width: 300px; }
+.footer-brand {
+  max-width: 300px;
+}
 
 .footer-logo {
   font-size: 24px;
@@ -1683,7 +1797,9 @@ textarea.cyber-input {
   letter-spacing: 2px;
 }
 
-.footer-logo:hover { color: var(--accent-green); }
+.footer-logo:hover {
+  color: var(--accent-green);
+}
 
 .logo-underscore {
   color: var(--accent-green);
@@ -1751,7 +1867,9 @@ textarea.cyber-input {
   transition: color 0.2s;
 }
 
-.footer-nav-link:hover { color: var(--accent-green); }
+.footer-nav-link:hover {
+  color: var(--accent-green);
+}
 
 .footer-contact-item {
   font-size: 14px;
@@ -1769,7 +1887,9 @@ textarea.cyber-input {
   transition: color 0.2s;
 }
 
-.footer-contact-link:hover { color: var(--accent-green); }
+.footer-contact-link:hover {
+  color: var(--accent-green);
+}
 
 .footer-divider {
   height: 1px;
@@ -1802,69 +1922,7 @@ textarea.cyber-input {
   50% { transform: scale(1.2); }
 }
 
-/* =========================================================
-   24. ОБЩИЕ СОСТОЯНИЯ
-   ========================================================= */
-.loading,
-.empty-state,
-.loading-page {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-secondary);
-  font-size: 18px;
-}
-
-.empty-state p { margin-bottom: 8px; }
-
-/* =========================================================
-   25. TOAST УВЕДОМЛЕНИЯ
-   ========================================================= */
-.toast-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 2000;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.toast {
-  padding: 14px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 14px;
-  min-width: 250px;
-  cursor: pointer;
-  animation: slideInRight 0.3s ease-out;
-}
-
-.toast-success {
-  background: var(--accent-green);
-  color: var(--bg-primary);
-}
-
-.toast-error {
-  background: var(--error);
-  color: white;
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(100px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* =========================================================
-   26. АДАПТИВНОСТЬ
-   ========================================================= */
-
-/* Планшеты */
+/* ===== АДАПТИВНОСТЬ ===== */
 @media (max-width: 968px) {
   .footer-grid {
     grid-template-columns: 1fr 1fr;
@@ -1876,33 +1934,47 @@ textarea.cyber-input {
   }
 }
 
-/* Мобильные */
 @media (max-width: 768px) {
-  .desktop-nav { display: none; }
-  .mobile-menu-btn { display: block; }
-  .mobile-nav { display: flex; }
-
+  .desktop-nav {
+    display: none;
+  }
+  .mobile-menu-btn {
+    display: block;
+  }
+  .mobile-nav {
+    display: flex;
+  }
   .hero {
     min-height: 70vh;
     padding: 40px 20px;
   }
-  .hero-buttons { flex-direction: column; }
-  .btn-primary, .btn-secondary {
+  .hero-buttons {
+    flex-direction: column;
+  }
+  .btn-primary,
+  .btn-secondary {
     width: 100%;
     text-align: center;
   }
-
-  .about-section, .faq-section { padding: 60px 20px; }
-  .faq-grid, .features-grid { grid-template-columns: 1fr; }
-
+  .about-section,
+  .faq-section {
+    padding: 60px 20px;
+  }
+  .faq-grid,
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
   .profile-header {
     flex-direction: column;
     text-align: center;
     gap: 20px;
   }
-  .profile-info { text-align: center; }
-  .form-row { grid-template-columns: 1fr; }
-
+  .profile-info {
+    text-align: center;
+  }
+  .form-row {
+    grid-template-columns: 1fr;
+  }
   .profile-tabs {
     flex-direction: column;
     gap: 0;
@@ -1916,26 +1988,47 @@ textarea.cyber-input {
     border-bottom: none;
     border-left-color: var(--accent-green);
   }
-
-  .posts-grid { grid-template-columns: 1fr; }
-  .post-detail-title { font-size: 24px; }
-  .post-detail-card { padding: 20px; }
-  .post-card-photo { height: 180px; }
-  .post-detail-photo { max-height: 300px; }
-
-  .article-card { flex-direction: column; }
+  .posts-grid {
+    grid-template-columns: 1fr;
+  }
+  .post-detail-title {
+    font-size: 24px;
+  }
+  .post-detail-card {
+    padding: 20px;
+  }
+  .post-card-photo {
+    height: 180px;
+  }
+  .post-detail-photo {
+    max-height: 300px;
+  }
+  .article-card {
+    flex-direction: column;
+  }
   .article-image {
     width: 100%;
     height: 180px;
   }
-  .article-detail-title { font-size: 24px; }
-  .article-detail-card { padding: 20px; }
-  .search-form { flex-direction: column; }
+  .article-detail-title {
+    font-size: 24px;
+  }
+  .article-detail-card {
+    padding: 20px;
+  }
+  .search-form {
+    flex-direction: column;
+  }
   .search-form .btn-primary,
-  .search-form .btn-secondary { width: 100%; }
-  .articles-filters { padding: 16px; }
-  .filter-group { gap: 8px; }
-
+  .search-form .btn-secondary {
+    width: 100%;
+  }
+  .articles-filters {
+    padding: 16px;
+  }
+  .filter-group {
+    gap: 8px;
+  }
   .admin-article-item {
     flex-direction: column;
     align-items: flex-start;
@@ -1944,25 +2037,26 @@ textarea.cyber-input {
     width: 100%;
     flex-wrap: wrap;
   }
-  .admin-action-btn, .admin-view-btn {
+  .admin-action-btn,
+  .admin-view-btn {
     flex: 1;
     min-width: 120px;
     text-align: center;
   }
-
   .modal-large {
     max-width: 95%;
     padding: 24px;
   }
 }
 
-/* Маленькие мобильные */
 @media (max-width: 576px) {
   .footer-grid {
     grid-template-columns: 1fr;
     gap: 24px;
   }
-  .footer-container { padding: 32px 20px 20px; }
+  .footer-container {
+    padding: 32px 20px 20px;
+  }
   .footer-bottom {
     flex-direction: column;
     text-align: center;
