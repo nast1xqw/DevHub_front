@@ -5,6 +5,8 @@ import { useToast } from '../context/ToastContext';
 import { useNavigate } from 'react-router-dom';
 import CreateArticleModal from '../components/CreateArticleModal';
 import EditArticleModal from '../components/EditArticleModal';
+import ParseArticlesButton from '../components/ParseArticlesButton';
+
 
 const AdminPage = () => {
   const { user } = useAuth();
@@ -68,6 +70,7 @@ const AdminPage = () => {
       <div className="admin-container">
         <div className="admin-header">
           <h1 className="page-title">АДМИН-ПАНЕЛЬ</h1>
+          <ParseArticlesButton />
           <button className="btn-primary" onClick={() => setShowCreateModal(true)}>
             + Создать статью
           </button>
