@@ -18,6 +18,7 @@ const CreatePostModal = ({ onClose, onCreated }) => {
     if (file) {
       if (file.size > 2 * 1024 * 1024) {
         addToast('Файл больше 2 МБ', 'error');
+        e.target.value = '';
         return;
       }
       setPhoto(file);
@@ -52,8 +53,9 @@ const CreatePostModal = ({ onClose, onCreated }) => {
         return;
       }
 
-      addToast('Пост создан!', 'success');
-      onCreated?.();
+      // message: «Пост опубликован» (админ) или «Пост отправлен на модерацию» (остальные)
+      addToast(data.message || 'Пост создан!', 'success');
+      onCreated?.(data.post);
       onClose();
     } catch (error) {
       addToast('Ошибка при создании поста', 'error');
