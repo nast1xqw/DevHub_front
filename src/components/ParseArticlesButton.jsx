@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { parseAPI } from '../api/api';
 import { useToast } from '../context/ToastContext';
 
-const ParseArticlesButton = () => {
+// Парсинг синхронный: бэк по очереди читает все RSS-ленты, поэтому запрос может идти долго.
+const ParseArticlesButton = ({ onDone }) => {
   const [loading, setLoading] = useState(false);
   const { addToast } = useToast();
 
@@ -12,14 +13,13 @@ const ParseArticlesButton = () => {
       const data = await parseAPI.parseArticles();
       if (data.ok) {
         addToast(data.message, 'success');
-        // Обновляем страницу или список статей
-        window.location.reload();
+        onDone?.(data);
       } else {
-        addToast('Ошибка при парсинге', 'error');
+        addToast(data.errors?.detail?.[0] || 'Ошибка при обновлении статей', 'error');
       }
     } catch (error) {
       console.error('Parse error:', error);
-      addToast('Ошибка при парсинге статей', 'error');
+      addToast('Ошибка при обновлении статей', 'error');
     } finally {
       setLoading(false);
     }
@@ -30,12 +30,13 @@ const ParseArticlesButton = () => {
       onClick={handleParse}
       disabled={loading}
       className="btn-primary"
+      title={loading ? 'Ленты читаются по очереди, это может занять до минуты' : undefined}
       style={{
         backgroundColor: loading ? '#8a8a9a' : '#bfff00',
         cursor: loading ? 'not-allowed' : 'pointer',
       }}
     >
-      {loading ? '⏳ Парсинг...' : ' Спарсить статьи с Хабра'}
+      {loading ? '⏳ Обновление...' : 'Обновить статьи из источников'}
     </button>
   );
 };
