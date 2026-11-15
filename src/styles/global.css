@@ -2062,3 +2062,120 @@ textarea.cyber-input {
     text-align: center;
   }
 }
+
+/* ===== ПАГИНАЦИЯ ===== */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 40px;
+}
+
+.pagination .filter-btn {
+  min-width: 38px;
+  padding: 8px 14px;
+}
+
+.pagination .filter-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.pagination-gap {
+  color: var(--text-secondary);
+  padding: 0 4px;
+}
+
+/* ===== МОДАЛКА ПОДТВЕРЖДЕНИЯ ===== */
+.confirm-modal {
+  max-width: 440px;
+  text-align: center;
+}
+
+.confirm-modal .modal-title {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.confirm-message {
+  color: var(--text-secondary);
+  word-break: break-word;
+}
+
+.confirm-actions {
+  justify-content: center;
+}
+
+.btn-danger {
+  display: inline-block;
+  background: var(--error);
+  color: #fff;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-danger:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 68, 68, 0.3);
+}
+
+.btn-danger:disabled,
+.confirm-actions .btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== РЕКОМЕНДАЦИИ ===== */
+.recommendations {
+  margin-bottom: 40px;
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.recommendation-card {
+  height: 100%;
+  padding: 20px;
+}
+
+/* ===== СТАТУС ПОСТА ===== */
+.post-status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.post-status-badge.status-pending {
+  color: var(--accent-green);
+  border-color: var(--accent-green);
+}
+
+.post-status-badge.status-rejected {
+  color: var(--error);
+  border-color: var(--error);
+}
+
+.pending-post-text {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin: 6px 0 10px;
+  white-space: pre-line;
+  word-break: break-word;
+}
