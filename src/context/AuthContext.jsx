@@ -1,5 +1,6 @@
-import { createContext, useState, useEffect, useContext } from 'react';
-import { authAPI } from '../api/api';
+import { createContext, useState, useEffect, useContext, useRef } from 'react';
+import { authAPI, setUnauthorizedHandler } from '../api/api';
+import { useToast } from './ToastContext';
 
 const AuthContext = createContext();
 
@@ -8,17 +9,27 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { addToast } = useToast();
+  const userRef = useRef(null);
 
   useEffect(() => {
-    authAPI.getCSRF().finally(() => {
-      checkAuth();
+    userRef.current = user;
+  }, [user]);
+
+  useEffect(() => {
+    setUnauthorizedHandler(() => {
+      if (userRef.current) {
+        userRef.current = null;
+        setUser(null);
+        addToast('Сессия истекла, войдите снова', 'error');
+      }
     });
-  }, []);
+    return () => setUnauthorizedHandler(null);
+  }, [addToast]);
 
   const checkAuth = async () => {
     try {
       const data = await authAPI.getMe();
-      console.log('checkAuth response:', data);
       setUser(data.user || null);
     } catch (error) {
       console.error('Auth check error:', error);
@@ -28,9 +39,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
   const login = async (credentials) => {
     const data = await authAPI.login(credentials);
-    console.log('Login response:', data);
     if (!data.ok) {
       throw data;
     }
@@ -40,7 +54,6 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     const data = await authAPI.register(userData);
-    console.log('Register response:', data);
     if (!data.ok) {
       throw data;
     }

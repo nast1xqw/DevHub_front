@@ -16,8 +16,8 @@ import './styles/animations.css';
 function App() {
   return (
     <Router>
-      <AuthProvider>
-        <ToastProvider>
+      <ToastProvider>
+        <AuthProvider>
           <div className="app">
             <Header />
             <main>
@@ -29,13 +29,12 @@ function App() {
                 <Route path="/articles/:id" element={<ArticleDetailPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/admin" element={<AdminPage />} />
-                <Route path="/admin" element={<div style={{padding: '60px 24px', maxWidth: '1200px', margin: '0 auto'}}><h1>Админ-панель (в разработке)</h1></div>} />
               </Routes>
             </main>
             <Footer />
           </div>
-        </ToastProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </ToastProvider>
     </Router>
   );
 }
