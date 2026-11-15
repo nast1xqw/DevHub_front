@@ -2,46 +2,80 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { articlesAPI } from "../api/api";
 import { useToast } from "../context/ToastContext";
+import Pagination from "../components/Pagination";
+import RecommendedArticles from "../components/RecommendedArticles";
+import { makeExcerpt } from "../utils/text";
+
+const PAGE_SIZE = 12;
 
 const ArticlesPage = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState("newest");
   const [selectedTag, setSelectedTag] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [allTags, setAllTags] = useState([]);
   const { addToast } = useToast();
 
+  // Теги собираем один раз и независимо от фильтра, сортировки и страницы
   useEffect(() => {
-    loadArticles();
+    let cancelled = false;
+    articlesAPI
+      .getTags()
+      .then((tags) => {
+        if (!cancelled) setAllTags(tags);
+      })
+      .catch((error) => console.error("Ошибка загрузки тегов:", error));
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const loadArticles = async (tag = "", sortType = "newest") => {
-    setLoading(true);
-    try {
-      const data = await articlesAPI.getAll(tag, sortType);
-      const list = data.articles || [];
-      setArticles(list);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      try {
+        const data = await articlesAPI.getAll({
+          tag: selectedTag,
+          sort,
+          page,
+          size: PAGE_SIZE,
+        });
+        if (cancelled) return;
+        if (data.ok) {
+          setArticles(data.articles || []);
+          setTotalPages(data.total_pages || 1);
+        } else {
+          addToast("Ошибка загрузки статей", "error");
+        }
+      } catch (error) {
+        console.error("Ошибка загрузки статей:", error);
+        if (!cancelled) addToast("Ошибка загрузки статей", "error");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedTag, sort, page, addToast]);
 
-      const tags = new Set();
-      list.forEach((a) => (a.tags || []).forEach((t) => tags.add(t)));
-      setAllTags([...tags]);
-    } catch (error) {
-      console.error("Ошибка загрузки статей:", error);
-      addToast("Ошибка загрузки статей", "error");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // При смене сортировки или тега возвращаемся на первую страницу
   const handleSort = (newSort) => {
     setSort(newSort);
-    loadArticles(selectedTag, newSort);
+    setPage(1);
   };
 
   const handleTagClick = (tag) => {
-    const newTag = selectedTag === tag ? "" : tag;
-    setSelectedTag(newTag);
-    loadArticles(newTag, sort);
+    setSelectedTag(selectedTag === tag ? "" : tag);
+    setPage(1);
+  };
+
+  const changePage = (p) => {
+    setPage(p);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -50,6 +84,8 @@ const ArticlesPage = () => {
         <div className="articles-header">
           <h1 className="page-title">СТАТЬИ</h1>
         </div>
+
+        <RecommendedArticles />
 
         <div className="articles-filters">
           <div className="filter-group">
@@ -103,48 +139,47 @@ const ArticlesPage = () => {
             <p>Статьи не найдены</p>
           </div>
         ) : (
-          <div className="articles-list">
-            {articles.map((article) => (
-              <Link
-                key={article.id}
-                to={`/articles/${article.id}`}
-                className="article-link"
-              >
-                <div className="card article-card">
-                  <div className="article-content">
-                    <h3 className="article-title">{article.title}</h3>
+          <>
+            <div className="articles-list">
+              {articles.map((article) => (
+                <Link
+                  key={article.id}
+                  to={`/articles/${article.id}`}
+                  className="article-link"
+                >
+                  <div className="card article-card">
+                    <div className="article-content">
+                      <h3 className="article-title">{article.title}</h3>
 
-                    {article.tags && article.tags.length > 0 && (
-                      <div className="article-tags">
-                        {article.tags.map((tag) => (
-                          <span key={tag} className="article-tag">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    <p
-                      className="article-excerpt"
-                      dangerouslySetInnerHTML={{
-                        __html: article.text.substring(0, 200) + "...",
-                      }}
-                    />
-
-                    <div className="article-meta">
-                      <span className="article-author">
-                        ✍️ {article.author || "Админ"}
-                      </span>
-                      <span className="article-date">📅 {article.created}</span>
-                      {article.is_favorited && (
-                        <span className="article-fav-badge">★ В избранном</span>
+                      {article.tags && article.tags.length > 0 && (
+                        <div className="article-tags">
+                          {article.tags.map((tag) => (
+                            <span key={tag} className="article-tag">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
                       )}
+
+                      {/* Сначала убираем теги, потом обрезаем; выводим как обычный текст */}
+                      <p className="article-excerpt">{makeExcerpt(article.text, 200)}</p>
+
+                      <div className="article-meta">
+                        <span className="article-author">
+                          ✍️ {article.author || "Админ"}
+                        </span>
+                        <span className="article-date">📅 {article.created}</span>
+                        {article.is_favorited && (
+                          <span className="article-fav-badge">★ В избранном</span>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                </Link>
+              ))}
+            </div>
+            <Pagination page={page} totalPages={totalPages} onChange={changePage} />
+          </>
         )}
       </div>
     </div>
