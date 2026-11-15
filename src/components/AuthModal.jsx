@@ -45,6 +45,9 @@ const AuthModal = ({ type, onClose }) => {
           newErrors[field] = msgs[0];
         }
         setErrors(newErrors);
+        // Общие ошибки (неверный логин/пароль) приходят под ключом detail или default
+        const general = error.errors.detail?.[0] || error.errors.default?.[0];
+        if (general) addToast(general, 'error');
       } else {
         addToast('Произошла ошибка', 'error');
       }
