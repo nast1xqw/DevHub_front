@@ -6,7 +6,7 @@ import { articlesAPI } from '../api/api';
 import { Link } from 'react-router-dom';
 
 const ProfilePage = () => {
-  const { user, updateProfile } = useAuth();
+  const { user, loading: authLoading, updateProfile } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
@@ -25,7 +25,7 @@ const ProfilePage = () => {
   });
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -40,17 +40,28 @@ const ProfilePage = () => {
     }
   }, [user]);
 
+  // Редирект только после ответа /api/auth/me/, иначе обновление страницы выкидывает на главную
   useEffect(() => {
-    if (!user) {
+    if (!authLoading && !user) {
       navigate('/');
     }
-  }, [user, navigate]);
+  }, [authLoading, user, navigate]);
 
+  // 6. Избранное грузим сразу при открытии профиля, чтобы счётчик был верным
+  useEffect(() => {
+    if (user) {
+      loadFavorites();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
+
+  // и обновляем при открытии вкладки (статью могли убрать из избранного на другой странице)
   useEffect(() => {
     if (activeTab === 'favorites' && user) {
       loadFavorites();
     }
-  }, [activeTab, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
 
   const loadFavorites = async () => {
     setLoadingFavorites(true);
@@ -77,16 +88,39 @@ const ProfilePage = () => {
     if (file) {
       if (file.size > 2 * 1024 * 1024) {
         addToast('Файл больше 2 МБ', 'error');
+        e.target.value = ''; // иначе слишком большой файл всё равно уйдёт при сохранении
         return;
       }
       setAvatarPreview(URL.createObjectURL(file));
     }
   };
 
+  const resetForm = () => {
+    if (user) {
+      setFormData({
+        first_name: user.first_name || '',
+        last_name: user.last_name || '',
+        patronymic: user.patronymic || '',
+        email: user.email || '',
+        bio: user.bio || '',
+      });
+      setAvatarPreview(user.avatar || null);
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    setErrors({});
+  };
+
+  const handleCancel = () => {
+    resetForm();
+    setEditing(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
-    setLoading(true);
+    setSaving(true);
 
     const formDataToSend = new FormData();
     formDataToSend.append('first_name', formData.first_name);
@@ -103,6 +137,9 @@ const ProfilePage = () => {
     try {
       await updateProfile(formDataToSend);
       addToast('Профиль обновлён!', 'success');
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
       setEditing(false);
     } catch (error) {
       if (error.errors) {
@@ -115,11 +152,11 @@ const ProfilePage = () => {
         addToast('Ошибка обновления', 'error');
       }
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
-  if (!user) {
+  if (authLoading || !user) {
     return <div className="loading-page">Загрузка...</div>;
   }
 
@@ -149,7 +186,7 @@ const ProfilePage = () => {
 
           <button 
             className="btn-primary"
-            onClick={() => setEditing(!editing)}
+            onClick={() => (editing ? handleCancel() : setEditing(true))}
           >
             {editing ? 'Отмена' : 'Редактировать'}
           </button>
@@ -254,9 +291,9 @@ const ProfilePage = () => {
                 <button 
                   type="submit" 
                   className="btn-primary"
-                  disabled={loading}
+                  disabled={saving}
                 >
-                  {loading ? 'СОХРАНЕНИЕ...' : 'СОХРАНИТЬ'}
+                  {saving ? 'СОХРАНЕНИЕ...' : 'СОХРАНИТЬ'}
                 </button>
               </form>
             )}
@@ -283,7 +320,7 @@ const ProfilePage = () => {
 
         {activeTab === 'favorites' && (
           <div className="favorites-section">
-            {loadingFavorites ? (
+            {loadingFavorites && favorites.length === 0 ? (
               <div className="loading">Загрузка...</div>
             ) : favorites.length === 0 ? (
               <div className="empty-state">
