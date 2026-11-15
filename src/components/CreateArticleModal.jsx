@@ -121,8 +121,6 @@ const CreateArticleModal = ({ onClose, onCreated }) => {
             </button>
           </div>
         </form>
-
-        <button className="modal-close" onClick={onClose}>✕</button>
       </div>
     </div>
   );
