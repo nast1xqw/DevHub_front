@@ -4,6 +4,7 @@ import { postsAPI } from "../api/api";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 import CommentSection from "../components/CommentSection";
+import ConfirmModal from "../components/ConfirmModal";
 
 const PostDetailPage = () => {
   const { id } = useParams();
@@ -12,6 +13,8 @@ const PostDetailPage = () => {
   const { addToast } = useToast();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     loadPost();
@@ -51,15 +54,11 @@ const PostDetailPage = () => {
   const handleDelete = async () => {
     if (!user) {
       addToast("Войдите, чтобы удалить пост", "error");
+      setConfirmOpen(false);
       return;
     }
 
-    const confirmed = window.confirm(
-      "Вы уверены, что хотите удалить этот пост? Это действие нельзя отменить.",
-    );
-
-    if (!confirmed) return;
-
+    setDeleting(true);
     try {
       const data = await postsAPI.delete(id);
       if (data.ok) {
@@ -71,6 +70,9 @@ const PostDetailPage = () => {
     } catch (error) {
       console.error("Ошибка удаления:", error);
       addToast("Ошибка при удалении поста", "error");
+    } finally {
+      setDeleting(false);
+      setConfirmOpen(false);
     }
   };
 
@@ -110,6 +112,12 @@ const PostDetailPage = () => {
             </div>
           </div>
 
+          {post.status && post.status !== "approved" && (
+            <div className={`post-status-badge status-${post.status}`}>
+              {post.status === "pending" ? "⏳ На модерации" : "✕ Отклонён"}
+            </div>
+          )}
+
           <h1 className="post-detail-title">{post.title}</h1>
 
           {post.tags?.length > 0 && (
@@ -143,7 +151,7 @@ const PostDetailPage = () => {
             {(isAuthor || isAdmin) && (
               <button
                 className="btn-delete"
-                onClick={handleDelete}
+                onClick={() => setConfirmOpen(true)}
                 style={{ marginLeft: "12px" }}
               >
                 🗑️ Удалить пост
@@ -154,6 +162,16 @@ const PostDetailPage = () => {
 
         <CommentSection postId={id} />
       </div>
+
+      {confirmOpen && (
+        <ConfirmModal
+          title="Удалить пост?"
+          message="Это действие нельзя отменить."
+          loading={deleting}
+          onConfirm={handleDelete}
+          onCancel={() => setConfirmOpen(false)}
+        />
+      )}
     </div>
   );
 };
