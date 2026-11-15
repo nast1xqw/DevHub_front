@@ -1,211 +1,109 @@
-function getCSRF() {
-  const cookies = document.cookie.split(';');
-  for (let cookie of cookies) {
-    cookie = cookie.trim();
-    if (cookie.startsWith('csrftoken=')) {
-      return cookie.substring('csrftoken='.length);
-    }
+let unauthorizedHandler = null;
+
+// AuthContext регистрирует сюда обработчик: он вызывается при любом ответе 401.
+export const setUnauthorizedHandler = (fn) => {
+  unauthorizedHandler = fn;
+};
+
+async function request(url, { method = 'GET', json, formData } = {}) {
+  const headers = {};
+  let body;
+  if (formData !== undefined) {
+    body = formData; 
+  } else if (json !== undefined) {
+    headers['Content-Type'] = 'application/json';
+    body = JSON.stringify(json);
   }
-  return '';
-}
 
-function getHeaders() {
-  const headers = {
-    'Content-Type': 'application/json',
-    'X-CSRFToken': getCSRF(),
-  };
-  console.log('Headers:', headers);
-  console.log('All cookies:', document.cookie);
-  return headers;
-}
-//Авторизация
-export const authAPI = {
-  getCSRF: () =>
-    fetch('/api/auth/csrf/', {
-      credentials: 'same-origin',
-    }).then(res => {
-      console.log('CSRF cookie set, cookies:', document.cookie);
-      return res.json();
-    }),
-
-  getMe: () =>
-    fetch('/api/auth/me/', {
-      headers: getHeaders(),
-      credentials: 'same-origin',
-    }).then(res => res.json()),
-
-  register: (data) => {
-    console.log('Register data:', data);
-    const body = JSON.stringify(data);
-    console.log('Register body:', body);
-    return fetch('/api/auth/register/', {
-      method: 'POST',
-      headers: getHeaders(),
-      credentials: 'same-origin',
-      body: body,
-    }).then(async (res) => {
-      const json = await res.json();
-      console.log('Register response:', json);
-      return json;
-    });
-  },
-
-  login: (data) => {
-    console.log('Login data:', data);
-    const body = JSON.stringify(data);
-    console.log('Login body:', body);
-    return fetch('/api/auth/login/', {
-      method: 'POST',
-      headers: getHeaders(),
-      credentials: 'same-origin',
-      body: body,
-    }).then(async (res) => {
-      const json = await res.json();
-      console.log('Login response:', json);
-      return json;
-    });
-  },
-
-  logout: () =>
-    fetch('/api/auth/logout/', {
-      method: 'POST',
-      headers: getHeaders(),
-      credentials: 'same-origin',
-    }).then(res => res.json()),
-
-  updateProfile: (formData) =>
-    fetch('/api/profile/', {
-      method: 'POST',
-      headers: {
-        'X-CSRFToken': getCSRF(),
-      },
-      credentials: 'same-origin',
-      body: formData,
-    }).then(res => res.json()),
-};
-//Посты
-export const postsAPI = {
-  getAll: (page = 1) =>
-    fetch(`/api/posts/?page=${page}`, {
-      headers: getHeaders(),
-      credentials: 'same-origin',
-    }).then(res => res.json()),
-
-  getById: (id) =>
-    fetch(`/api/posts/${id}/`, {
-      headers: getHeaders(),
-      credentials: 'same-origin',
-    }).then(res => res.json()),
-
-  create: (formData) =>
-    fetch('/api/posts/create/', {
-      method: 'POST',
-      headers: {
-        'X-CSRFToken': getCSRF(),
-      },
-      credentials: 'same-origin',
-      body: formData, 
-    }).then(res => res.json()),
-
-  delete: (id) =>
-  fetch(`/api/posts/${id}/delete/`, {  
-    method: 'DELETE',
-    headers: getHeaders(),
+  const res = await fetch(url, {
+    method,
+    headers,
     credentials: 'same-origin',
-  }).then(res => res.json()),
+    body,
+  });
 
-  like: (id) =>
-    fetch(`/api/posts/${id}/like/`, {
-      method: 'POST',
-      headers: getHeaders(),
-      credentials: 'same-origin',
-    }).then(res => res.json()),
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    data = { ok: false, errors: { detail: ['Ошибка сервера'] } };
+  }
 
-  getComments: (id) =>
-    fetch(`/api/posts/${id}/comments/`, {
-      headers: getHeaders(),
-      credentials: 'same-origin',
-    }).then(res => res.json()),
+  if (res.status === 401 && unauthorizedHandler) {
+    unauthorizedHandler();
+  }
+  return data;
+}
 
+const qs = (params) => {
+  const sp = new URLSearchParams();
+  Object.entries(params).forEach(([k, v]) => {
+    if (v !== undefined && v !== null && v !== '') sp.set(k, v);
+  });
+  const s = sp.toString();
+  return s ? `?${s}` : '';
+};
+
+// Авторизация
+export const authAPI = {
+  getMe: () => request('/api/auth/me/'),
+  register: (data) => request('/api/auth/register/', { method: 'POST', json: data }),
+  login: (data) => request('/api/auth/login/', { method: 'POST', json: data }),
+  logout: () => request('/api/auth/logout/', { method: 'POST' }),
+  updateProfile: (formData) => request('/api/profile/', { method: 'POST', formData }),
+};
+
+// Посты
+export const postsAPI = {
+  getAll: ({ page = 1, size = 10 } = {}) =>
+    request(`/api/posts/${qs({ page, size })}`),
+
+  getById: (id) => request(`/api/posts/${id}/`),
+  create: (formData) => request('/api/posts/create/', { method: 'POST', formData }),
+  delete: (id) => request(`/api/posts/${id}/delete/`, { method: 'DELETE' }),
+  like: (id) => request(`/api/posts/${id}/like/`, { method: 'POST' }),
+  getComments: (id) => request(`/api/posts/${id}/comments/`),
   addComment: (id, text) =>
-    fetch(`/api/posts/${id}/comments/create/`, {
-      method: 'POST',
-      headers: getHeaders(),
-      credentials: 'same-origin',
-      body: JSON.stringify({ text }),
-    }).then(res => res.json()),
+    request(`/api/posts/${id}/comments/create/`, { method: 'POST', json: { text } }),
+
+  // Модерация
+  getPending: () => request('/api/posts/pending/'),
+  approve: (id) => request(`/api/posts/${id}/approve/`, { method: 'POST' }),
+  reject: (id) => request(`/api/posts/${id}/reject/`, { method: 'POST' }),
 };
 
-//СТАТЬИ 
+// Статьи
 export const articlesAPI = {
-  getAll: (tag = '', sort = 'newest') => {
-    let url = '/api/articles/?';
-    if (tag) url += `tag=${encodeURIComponent(tag)}&`;
-    if (sort) url += `sort=${sort}`;
-    return fetch(url, {
-      headers: getHeaders(),
-      credentials: 'same-origin',
-    }).then(res => res.json());
+  getAll: ({ tag = '', sort = 'newest', page = 1, size = 12 } = {}) =>
+    request(`/api/articles/${qs({ tag, sort, page, size })}`),
+
+  getById: (id) => request(`/api/articles/${id}/`),
+  create: (data) => request('/api/articles/create/', { method: 'POST', json: data }),
+  update: (id, data) => request(`/api/articles/${id}/edit/`, { method: 'POST', json: data }),
+  delete: (id) => request(`/api/articles/${id}/delete/`, { method: 'DELETE' }),
+  getFavorites: () => request('/api/articles/favorites/'),
+  getRecommendations: () => request('/api/articles/recommendations/'),
+
+  getTags: async () => {
+    const tags = new Set();
+    let page = 1;
+    let totalPages = 1;
+    do {
+      const data = await articlesAPI.getAll({ page, size: 50 });
+      (data.articles || []).forEach((a) => (a.tags || []).forEach((t) => tags.add(t)));
+      totalPages = data.total_pages || 1;
+      page += 1;
+    } while (page <= totalPages && page <= 10);
+    return [...tags].sort((a, b) => a.localeCompare(b));
   },
-
-  getById: (id) =>
-    fetch(`/api/articles/${id}/`, {
-      headers: getHeaders(),
-      credentials: 'same-origin',
-    }).then(res => res.json()),
-
-  create: (data) =>
-    fetch('/api/articles/create/', {
-      method: 'POST',
-      headers: getHeaders(),
-      credentials: 'same-origin',
-      body: JSON.stringify(data),
-    }).then(res => res.json()),
-
-  update: (id, data) =>
-    fetch(`/api/articles/${id}/edit/`, {
-      method: 'POST',
-      headers: getHeaders(),
-      credentials: 'same-origin',
-      body: JSON.stringify(data),
-    }).then(res => res.json()),
-
-  delete: (id) =>
-    fetch(`/api/articles/${id}/delete/`, {
-      method: 'DELETE',
-      headers: getHeaders(),
-      credentials: 'same-origin',
-    }).then(res => res.json()),
-
-  getFavorites: () =>
-    fetch('/api/articles/favorites/', {
-      headers: getHeaders(),
-      credentials: 'same-origin',
-    }).then(res => res.json()),
-
-  getRecommendations: () =>
-    fetch('/api/articles/recommendations/', {
-      headers: getHeaders(),
-      credentials: 'same-origin',
-    }).then(res => res.json()),
 };
 
-//ИЗБРАННОЕ
+// Избранное
 export const favoritesAPI = {
-toggle: (articleId) =>
-fetch(`/api/articles/${articleId}/favorite/`, {
-method: 'POST',
-headers: getHeaders(),
-credentials: 'same-origin',
-}).then(res => res.json()),
+  toggle: (articleId) => request(`/api/articles/${articleId}/favorite/`, { method: 'POST' }),
 };
 
-// ПАРСИНГ СТАТЕЙ
+// Парсинг статей
 export const parseAPI = {
-parseArticles: () =>
-fetch('/api/articles/parse/', {
-method: 'POST',
-headers: getHeaders(),
-credentials: 'same-origin',
-}).then(res => res.json()),
+  parseArticles: () => request('/api/articles/parse/', { method: 'POST' }),
 };
